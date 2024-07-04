@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="style.css">
+    <title>Recipe Details</title>
+</head>
+<body>
+    <header>
+        <nav>
+            <h1>Recipe Details</h1>
+        </nav>
+    </header>
+    <main>
+        <section class="recipe-detail-section">
+            <div class="recipe-detail-container"></div>
+        </section>
+    </main>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const urlParams = new URLSearchParams(window.location.search);
+            const mealId = urlParams.get('id');
+            const recipeDetailContainer = document.querySelector('.recipe-detail-container');
+
+            // Function to fetch and display recipe details
+            const fetchRecipeDetails = async (mealId) => {
+                try {
+                    const response = await fetch(`https://www.themealdb.com/api/json/v1/1/lookup.php?i=${mealId}`);
+                    const data = await response.json();
+                    displayRecipeDetails(data.meals[0]);
+                } catch (error) {
+                    console.error("Error fetching recipe details:", error);
+                }
+            };
+
+            // Function to display recipe details
+            const displayRecipeDetails = (meal) => {
+                recipeDetailContainer.innerHTML = `
+                    <img src="${meal.strMealThumb}" alt="${meal.strMeal}">
+                    <h2>${meal.strMeal}</h2>
+                    <p>${meal.strInstructions}</p>
+                `;
+            };
+
+            fetchRecipeDetails(mealId);
+        });
+    </script>
+</body>
+</html>
